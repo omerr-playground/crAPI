@@ -1,3 +1,4 @@
+
 #
 # Licensed under the Apache License, Version 2.0 (the “License”);
 # you may not use this file except in compliance with the License.
@@ -88,7 +89,7 @@ class ContactMechanicView(APIView):
                     request_url,
                     params=request_data,
                     headers={"Authorization": request.META.get("HTTP_AUTHORIZATION")},
-                    verify=False,
+                    verify=True,  # Enable SSL certificate verification
                 )
                 if mechanic_response.status_code == status.HTTP_200_OK:
                     logger.info(f"Got a valid response at repeat count: {repeat_count}")
