@@ -76,69 +76,90 @@ jobs:
         id: qemu
         uses: docker/setup-qemu-action@v3
 
-      - name: Login to DockerHub
+      - name: Set image owner to lowercase
+        run: |
+          echo "OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')" >> ${GITHUB_ENV}
+
+      # --- MODIFICATION 2: Login to GHCR instead of DockerHub ---
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build crapi-identity all platforms and push to Docker Hub
-        uses: docker/build-push-action@v3
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+     # --- MODIFICATION 3: Update tags and name for all build steps ---
+      - name: Build crapi-identity all platforms and push to GHCR
+        uses: docker/build-push-action@v5 # Upgraded version
         with:
           context: ./services/identity
-          tags: crapi/crapi-identity:${{ env.TAG_LATEST }},crapi/crapi-identity:${{ env.TAG_NAME }}
+          tags: | # Using multi-line YAML for readability
+            ghcr.io/${{ env.OWNER_LOWER }}/crapi-identity:${{ env.TAG_LATEST }}
+            ghcr.io/${{ env.OWNER_LOWER }}/crapi-identity:${{ env.TAG_NAME }}
           platforms: ${{ env.PLATFORMS }}
           push: true
           cache-from: type=gha,scope=identity-service
           cache-to: type=gha,mode=max,scope=identity-service
 
-      - name: Build crapi-workshop all platforms and push to Docker Hub
-        uses: docker/build-push-action@v3
+      - name: Build crapi-workshop all platforms and push to GHCR
+        uses: docker/build-push-action@v5 # Upgraded version
         with:
           context: ./services/workshop
-          tags: crapi/crapi-workshop:${{ env.TAG_LATEST }},crapi/crapi-workshop:${{ env.TAG_NAME }}
+          tags: |
+            ghcr.io/${{ env.OWNER_LOWER }}/crapi-workshop:${{ env.TAG_LATEST }}
+            ghcr.io/${{ env.OWNER_LOWER }}/crapi-workshop:${{ env.TAG_NAME }}
           platforms: ${{ env.PLATFORMS }}
           push: true
           cache-from: type=gha,scope=workshop-service
           cache-to: type=gha,mode=max,scope=workshop-service
 
-      - name: Build crapi-community all platforms and push to Docker Hub
-        uses: docker/build-push-action@v3
+      - name: Build crapi-community all platforms and push to GHCR
+        uses: docker/build-push-action@v5 # Upgraded version
         with:
           context: ./services/community
-          tags: crapi/crapi-community:${{ env.TAG_LATEST }},crapi/crapi-community:${{ env.TAG_NAME }}
+          tags: |
+            ghcr.io/${{ env.OWNER_LOWER }}/crapi-community:${{ env.TAG_LATEST }}
+            ghcr.io/${{ env.OWNER_LOWER }}/crapi-community:${{ env.TAG_NAME }}
           platforms: ${{ env.PLATFORMS }}
           push: true
           cache-from: type=gha,scope=community-service
           cache-to: type=gha,mode=max,scope=community-service
 
-      - name: Build crapi-web all platforms and push to Docker Hub
-        uses: docker/build-push-action@v3
+      - name: Build crapi-web all platforms and push to GHCR
+        uses: docker/build-push-action@v5 # Upgraded version
         with:
           context: ./services/web
-          tags: crapi/crapi-web:${{ env.TAG_LATEST }},crapi/crapi-web:${{ env.TAG_NAME }}
+          tags: |
+            ghcr.io/${{ env.OWNER_LOWER }}/crapi-web:${{ env.TAG_LATEST }}
+            ghcr.io/${{ env.OWNER_LOWER }}/crapi-web:${{ env.TAG_NAME }}
           platforms: ${{ env.PLATFORMS }}
           push: true
           cache-from: type=gha,scope=web-service
           cache-to: type=gha,mode=max,scope=web-service
 
-      - name: Build gateway-service all platforms and push to Docker Hub
-        uses: docker/build-push-action@v3
+      - name: Build gateway-service all platforms and push to GHCR
+        uses: docker/build-push-action@v5 # Upgraded version
         with:
           context: ./services/gateway-service
-          tags: crapi/gateway-service:${{ env.TAG_LATEST }},crapi/gateway-service:${{ env.TAG_NAME }}
+          tags: |
+            ghcr.io/${{ env.OWNER_LOWER }}/gateway-service:${{ env.TAG_LATEST }}
+            ghcr.io/${{ env.OWNER_LOWER }}/gateway-service:${{ env.TAG_NAME }}
           platforms: ${{ env.PLATFORMS }}
           push: true
           cache-from: type=gha,scope=gateway-service
           cache-to: type=gha,mode=max,scope=gateway-service
 
-      - name: Build mailhog all platforms and push to Docker Hub
-        uses: docker/build-push-action@v3
+      - name: Build mailhog all platforms and push to GHCR
+        uses: docker/build-push-action@v5 # Upgraded version
         with:
           context: ./services/mailhog
-          tags: crapi/mailhog:${{ env.TAG_LATEST }},crapi/mailhog:${{ env.TAG_NAME }}
+          tags: |
+            ghcr.io/${{ env.OWNER_LOWER }}/mailhog:${{ env.TAG_LATEST }}
+            ghcr.io/${{ env.OWNER_LOWER }}/mailhog:${{ env.TAG_NAME }}
           platforms: ${{ env.PLATFORMS }}
           push: true
+          cache-from: type=gha,scope=mailhog-service
+          cache-to: type=gha,mode=max,scope=mailhog-service
           cache-from: type=gha,scope=mailhog-service
           cache-to: type=gha,mode=max,scope=mailhog-service
 
