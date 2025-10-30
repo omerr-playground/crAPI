@@ -160,6 +160,3 @@ jobs:
           push: true
           cache-from: type=gha,scope=mailhog-service
           cache-to: type=gha,mode=max,scope=mailhog-service
-          cache-from: type=gha,scope=mailhog-service
-          cache-to: type=gha,mode=max,scope=mailhog-service
-
