@@ -1,4 +1,6 @@
 name: Publish Images
+permissions:
+  packages: write
 
 on:
   push:
