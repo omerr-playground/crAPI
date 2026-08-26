@@ -7,7 +7,6 @@
 package scram
 
 import (
-	"crypto/sha1"
 	"crypto/sha256"
 	"fmt"
 	"hash"
@@ -17,13 +16,9 @@ import (
 
 // HashGeneratorFcn abstracts a factory function that returns a hash.Hash
 // value to be used for SCRAM operations.  Generally, one would use the
-// provided package variables, `scram.SHA1` and `scram.SHA256`, for the most
+// provided package variables, `scram.SHA256`, for the most
 // common forms of SCRAM.
 type HashGeneratorFcn func() hash.Hash
-
-// SHA1 is a function that returns a crypto/sha1 hasher and should be used to
-// create Client objects configured for SHA-1 hashing.
-var SHA1 HashGeneratorFcn = func() hash.Hash { return sha1.New() }
 
 // SHA256 is a function that returns a crypto/sha256 hasher and should be used
 // to create Client objects configured for SHA-256 hashing.
