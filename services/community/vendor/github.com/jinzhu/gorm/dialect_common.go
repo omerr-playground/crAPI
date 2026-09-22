@@ -107,7 +107,7 @@ func (s commonDialect) HasIndex(tableName string, indexName string) bool {
 }
 
 func (s commonDialect) RemoveIndex(tableName string, indexName string) error {
-	_, err := s.db.Exec(fmt.Sprintf("DROP INDEX %v", indexName))
+	_, err := s.db.Exec("DROP INDEX ?", indexName)
 	return err
 }
 
