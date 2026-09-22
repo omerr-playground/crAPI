@@ -19,16 +19,24 @@ spec:
           args:
             - "service"
             - "crapi-identity"
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
         - name: wait-for-crapi-community
           image: groundnuty/k8s-wait-for:v1.3
           imagePullPolicy: Always
           args:
             - "service"
             - "crapi-community"
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
       containers:
       - name: crapi-workshop
         image: crapi/crapi-workshop:latest
-        imagePullPolicy: Always  
+        imagePullPolicy: Always
         ports:
         - containerPort: 8000
         envFrom:
@@ -44,3 +52,7 @@ spec:
             port: 8000
           initialDelaySeconds: 15
           periodSeconds: 10
+        securityContext:
+          capabilities:
+            drop:
+              - ALL
